@@ -37,8 +37,12 @@ export function Footer() {
             className="md:col-span-2"
           >
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
-                <span className="text-white font-bold text-xl">F</span>
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm p-1">
+                <img 
+                  src="/lovable-uploads/0f486b10-2d60-4583-82b8-3f86793f5b3c.png" 
+                  alt="FDCI Club Logo" 
+                  className="w-full h-full object-contain rounded-full"
+                />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gradient">FDCI Club</h3>

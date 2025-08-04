@@ -40,8 +40,12 @@ export function Header() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-3"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg">F</span>
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm p-1">
+              <img 
+                src="/lovable-uploads/0f486b10-2d60-4583-82b8-3f86793f5b3c.png" 
+                alt="FDCI Club Logo" 
+                className="w-full h-full object-contain rounded-full"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-gradient">FDCI Club</h1>
