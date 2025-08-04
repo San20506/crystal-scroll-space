@@ -8,7 +8,7 @@ import { ContactSection } from '@/components/sections/ContactSection';
 import { Footer } from '@/components/sections/Footer';
 import { Scene3D } from '@/components/Scene3D';
 import { ScrollProgress } from '@/components/ScrollProgress';
-import { useSmoothScroll } from '@/hooks/useScrollEffects';
+import { useScrollBehavior } from '@/hooks/useScrollEffects';
 
 // Loading component for 3D scene
 const SceneLoader = () => (
@@ -22,13 +22,14 @@ const SceneLoader = () => (
 );
 
 const Index = () => {
-  // Initialize smooth scrolling and scroll effects
-  useSmoothScroll();
+  // Initialize enhanced scroll behavior
+  useScrollBehavior();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       {/* Scroll Progress Indicators */}
       <ScrollProgress />
+      
       {/* 3D Background Scene */}
       <Suspense fallback={<SceneLoader />}>
         <Scene3D />
@@ -38,7 +39,7 @@ const Index = () => {
       <Header />
 
       {/* Main Content */}
-      <main className="relative z-10">
+      <main className="relative z-10 space-y-0">
         <HeroSection />
         <AboutSection />
         <ProjectsSection />

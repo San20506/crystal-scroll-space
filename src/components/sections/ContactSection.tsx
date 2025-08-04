@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollRevealSection, ScrollRevealContent } from '@/components/ScrollRevealSection';
 
 const contactInfo = [
   {
@@ -63,19 +64,40 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 relative overflow-hidden">
+    <ScrollRevealSection 
+      id="contact" 
+      className="py-20 relative overflow-hidden"
+      fadeDirection="up"
+      threshold={0.1}
+    >
       {/* Background Elements */}
-      <div className="absolute top-1/3 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/3 -right-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+      <motion.div 
+        className="absolute top-1/3 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"
+        animate={{
+          scale: [1, 1.2, 1],
+          x: [0, 30, 0]
+        }}
+        transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div 
+        className="absolute bottom-1/3 -right-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"
+        animate={{
+          scale: [1.2, 1, 1.2],
+          x: [0, -40, 0]
+        }}
+        transition={{
+          duration: 16,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
 
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollRevealContent className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold font-outfit mb-6">
             Get In <span className="text-gradient">Touch</span>
           </h2>
@@ -83,57 +105,37 @@ export function ContactSection() {
             Ready to join our creative community? Have a project idea? 
             We'd love to hear from you and discuss how we can collaborate.
           </p>
-        </motion.div>
+        </ScrollRevealContent>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-6"
-          >
+          <ScrollRevealContent className="space-y-6" fadeDirection="left" stagger={0.15}>
             {contactInfo.map((info, index) => (
-              <motion.div
-                key={info.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="glass-card border-primary/20 hover:border-primary/40 transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
-                        <info.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">
-                          {info.title}
-                        </h3>
-                        <p className="text-primary font-medium mb-1">
-                          {info.value}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {info.description}
-                        </p>
-                      </div>
+              <Card key={info.title} className="glass-card border-primary/20 hover:border-primary/40 transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
+                      <info.icon className="w-6 h-6 text-white" />
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-1">
+                        {info.title}
+                      </h3>
+                      <p className="text-primary font-medium mb-1">
+                        {info.value}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {info.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </motion.div>
+          </ScrollRevealContent>
 
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2"
-          >
+          <ScrollRevealContent className="lg:col-span-2" fadeDirection="right" delay={0.2}>
             <Card className="glass-card border-primary/30">
               <CardHeader>
                 <CardTitle className="text-2xl text-center text-gradient">
@@ -223,9 +225,9 @@ export function ContactSection() {
                 </form>
               </CardContent>
             </Card>
-          </motion.div>
+          </ScrollRevealContent>
         </div>
       </div>
-    </section>
+    </ScrollRevealSection>
   );
 }

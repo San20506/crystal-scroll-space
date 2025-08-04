@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowDown, Sparkles, MousePointer2 } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
-import { ScrollReveal, Parallax } from '@/components/ScrollEffects';
+import { ScrollRevealSection, ScrollRevealContent } from '@/components/ScrollRevealSection';
 
 export function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
@@ -13,7 +13,7 @@ export function HeroSection() {
     offset: ["start start", "end start"]
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
   
@@ -32,175 +32,179 @@ export function HeroSection() {
   const scrollToNext = () => {
     const nextSection = document.getElementById('about');
     if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
+      const targetPosition = nextSection.offsetTop - 80;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
-    <section
+    <ScrollRevealSection
       id="hero"
-      ref={ref}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden scroll-snap-section"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      fadeDirection="fade"
+      enableScrollProgress={true}
     >
-      {/* Interactive Background */}
-      <motion.div
-        className="absolute inset-0 parallax-bg"
-        style={{ 
-          y, 
-          opacity,
-          scale,
-          x: mousePosition.x * 0.1,
-          rotateY: mousePosition.x * 0.1
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-background/70" />
-        
-        {/* Interactive particles */}
-        <Parallax speed={-0.3} className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-primary/30 rounded-full"
-              style={{
-                left: `${10 + i * 8}%`,
-                top: `${20 + (i % 3) * 20}%`,
-                x: mousePosition.x * (0.1 + i * 0.02),
-                y: mousePosition.y * (0.1 + i * 0.02),
-              }}
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 0.8, 0.3],
-              }}
-              transition={{
-                duration: 3 + i * 0.5,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          ))}
-        </Parallax>
-      </motion.div>
+      <div ref={ref} className="absolute inset-0">
+        {/* Interactive Background */}
+        <motion.div
+          className="absolute inset-0 parallax-bg"
+          style={{ 
+            y, 
+            opacity,
+            scale,
+            x: mousePosition.x * 0.1,
+            rotateY: mousePosition.x * 0.1
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-background/70" />
+          
+          {/* Interactive particles */}
+          <div className="absolute inset-0">
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-primary/30 rounded-full"
+                style={{
+                  left: `${10 + i * 8}%`,
+                  top: `${20 + (i % 3) * 20}%`,
+                  x: mousePosition.x * (0.1 + i * 0.02),
+                  y: mousePosition.y * (0.1 + i * 0.02),
+                }}
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.3, 0.8, 0.3],
+                }}
+                transition={{
+                  duration: 3 + i * 0.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="space-y-8"
-        >
+        <ScrollRevealContent className="space-y-8" delay={0.2} stagger={0.15}>
           {/* Badge */}
-          <ScrollReveal direction="down" delay={0.2}>
+          <motion.div
+            className="inline-flex items-center space-x-2 glass-card px-4 py-2 rounded-full"
+            whileHover={{ scale: 1.05, y: -2 }}
+            style={{ 
+              x: mousePosition.x * 0.02,
+              y: mousePosition.y * 0.02 
+            }}
+          >
             <motion.div
-              className="inline-flex items-center space-x-2 glass-card px-4 py-2 rounded-full"
-              whileHover={{ scale: 1.05, y: -2 }}
-              style={{ 
-                x: mousePosition.x * 0.02,
-                y: mousePosition.y * 0.02 
-              }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              >
-                <Sparkles className="w-4 h-4 text-accent" />
-              </motion.div>
-              <span className="text-sm text-muted-foreground">Welcome to Innovation</span>
+              <Sparkles className="w-4 h-4 text-accent" />
             </motion.div>
-          </ScrollReveal>
+            <span className="text-sm text-muted-foreground">Welcome to Innovation</span>
+          </motion.div>
 
           {/* Main Heading */}
-          <ScrollReveal direction="up" delay={0.4}>
-            <motion.h1
-              className="text-5xl md:text-7xl lg:text-8xl font-bold font-outfit"
-              style={{ 
-                x: mousePosition.x * 0.01,
-                y: mousePosition.y * 0.01 
-              }}
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-bold font-outfit"
+            style={{ 
+              x: mousePosition.x * 0.01,
+              y: mousePosition.y * 0.01 
+            }}
+          >
+            <motion.span 
+              className="block"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <motion.span 
-                className="block"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                FDCI
-              </motion.span>
-              <motion.span 
-                className="block text-gradient glow-text"
-                whileHover={{ scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                CLUB
-              </motion.span>
-            </motion.h1>
-          </ScrollReveal>
+              FDCI
+            </motion.span>
+            <motion.span 
+              className="block text-gradient glow-text"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              CLUB
+            </motion.span>
+          </motion.h1>
 
           {/* Subtitle */}
-          <ScrollReveal direction="left" delay={0.6}>
-            <motion.p
-              className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
-              whileHover={{ scale: 1.02 }}
-            >
-              Where <span className="text-primary font-semibold">Design</span> meets{' '}
-              <span className="text-secondary font-semibold">Creativity</span> through{' '}
-              <span className="text-accent font-semibold">Innovation</span>
-            </motion.p>
-          </ScrollReveal>
+          <motion.p
+            className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
+            whileHover={{ scale: 1.02 }}
+          >
+            Where <span className="text-primary font-semibold">Design</span> meets{' '}
+            <span className="text-secondary font-semibold">Creativity</span> through{' '}
+            <span className="text-accent font-semibold">Innovation</span>
+          </motion.p>
 
           {/* Description */}
-          <ScrollReveal direction="right" delay={0.8}>
-            <motion.p
-              className="text-lg text-muted-foreground max-w-2xl mx-auto"
-              whileHover={{ scale: 1.01 }}
-            >
-              Join our community of forward-thinking designers, creative minds, and tech innovators 
-              shaping the future of digital experiences.
-            </motion.p>
-          </ScrollReveal>
+          <motion.p
+            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            whileHover={{ scale: 1.01 }}
+          >
+            Join our community of forward-thinking designers, creative minds, and tech innovators 
+            shaping the future of digital experiences.
+          </motion.p>
 
           {/* CTA Buttons */}
-          <ScrollReveal direction="up" delay={1}>
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 items-center justify-center"
-              style={{ 
-                x: mousePosition.x * 0.005,
-                y: mousePosition.y * 0.005 
-              }}
-            >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="lg"
-                  className="bg-gradient-primary btn-glow text-lg px-8 py-6 h-auto group"
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 items-center justify-center"
+            style={{ 
+              x: mousePosition.x * 0.005,
+              y: mousePosition.y * 0.005 
+            }}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                className="bg-gradient-primary btn-glow text-lg px-8 py-6 h-auto group"
+                onClick={() => {
+                  const contact = document.getElementById('contact');
+                  if (contact) {
+                    const targetPosition = contact.offsetTop - 80;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                  }
+                }}
+              >
+                <span className="mr-2">Join Our Community</span>
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
                 >
-                  <span className="mr-2">Join Our Community</span>
-                  <motion.div
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                    <MousePointer2 className="w-5 h-5" />
-                  </motion.div>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-primary/50 hover:bg-primary/10 text-lg px-8 py-6 h-auto"
-                  onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  View Projects
-                </Button>
-              </motion.div>
+                  <MousePointer2 className="w-5 h-5" />
+                </motion.div>
+              </Button>
             </motion.div>
-          </ScrollReveal>
-        </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary/50 hover:bg-primary/10 text-lg px-8 py-6 h-auto"
+                onClick={() => {
+                  const projects = document.getElementById('projects');
+                  if (projects) {
+                    const targetPosition = projects.offsetTop - 80;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                  }
+                }}
+              >
+                View Projects
+              </Button>
+            </motion.div>
+          </motion.div>
+        </ScrollRevealContent>
 
         {/* Enhanced Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 1.8 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
           <motion.button
@@ -251,6 +255,6 @@ export function HeroSection() {
           />
         ))}
       </div>
-    </section>
+    </ScrollRevealSection>
   );
 }

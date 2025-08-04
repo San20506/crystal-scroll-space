@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, Github, Eye } from 'lucide-react';
 import { useRef } from 'react';
+import { ScrollRevealSection, ScrollRevealContent } from '@/components/ScrollRevealSection';
 
 const projects = [
   {
@@ -52,30 +53,30 @@ const projects = [
 ];
 
 export function ProjectsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
-
   return (
-    <section id="projects" ref={ref} className="py-20 relative overflow-hidden">
+    <ScrollRevealSection 
+      id="projects" 
+      className="py-20 relative overflow-hidden"
+      fadeDirection="up"
+      threshold={0.15}
+    >
       {/* Background Elements */}
       <motion.div
-        style={{ y }}
         className="absolute top-0 right-1/4 w-72 h-72 bg-accent/10 rounded-full blur-3xl"
+        animate={{
+          scale: [1, 1.3, 1],
+          x: [0, 50, 0],
+          y: [0, -30, 0]
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
       />
 
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <ScrollRevealContent className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold font-outfit mb-6">
             Our <span className="text-gradient">Projects</span>
           </h2>
@@ -83,16 +84,10 @@ export function ProjectsSection() {
             Explore our portfolio of innovative projects that showcase the intersection 
             of design, technology, and creative problem-solving.
           </p>
-        </motion.div>
+        </ScrollRevealContent>
 
         {/* Featured Project */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
+        <ScrollRevealContent className="mb-16" delay={0.2}>
           {projects
             .filter(project => project.featured)
             .map((project) => (
@@ -144,71 +139,57 @@ export function ProjectsSection() {
                 </div>
               </Card>
             ))}
-        </motion.div>
+        </ScrollRevealContent>
 
         {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <ScrollRevealContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" stagger={0.15}>
           {projects
             .filter(project => !project.featured)
             .map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="glass-card border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden group h-full">
-                  <div className="relative overflow-hidden">
-                    <motion.img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                      whileHover={{ scale: 1.1 }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
-                        <ExternalLink className="w-4 h-4" />
-                      </Button>
-                    </div>
+              <Card key={project.id} className="glass-card border-primary/20 hover:border-primary/40 transition-all duration-300 overflow-hidden group h-full">
+                <div className="relative overflow-hidden">
+                  <motion.img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    whileHover={{ scale: 1.1 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <Button size="sm" variant="secondary" className="h-8 w-8 p-0">
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
                   </div>
+                </div>
+                
+                <CardContent className="p-6 flex-1 flex flex-col">
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">
+                    {project.description}
+                  </p>
                   
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-semibold mb-3 text-foreground">
-                      {project.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">
-                      {project.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs bg-muted">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs bg-muted">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-        </div>
+        </ScrollRevealContent>
 
         {/* View All Projects CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
+        <ScrollRevealContent className="text-center mt-12" delay={0.4}>
           <Button className="bg-gradient-primary btn-glow">
             View All Projects
             <ExternalLink className="w-4 h-4 ml-2" />
           </Button>
-        </motion.div>
+        </ScrollRevealContent>
       </div>
-    </section>
+    </ScrollRevealSection>
   );
 }
